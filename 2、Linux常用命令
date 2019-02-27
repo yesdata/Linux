@@ -1,0 +1,133 @@
+查看IP
+
+ifconfig 或者 hostname -i（需要配置文件之后才可以使用）
+ipconfig（Windows）
+关闭防火墙
+
+Service iptables status
+chkconfig iptables off
+配置静态IP地址
+
+vi /etc/sysconfig/network-scripts/ifcfg-eth0
+ONBOOT=yes
+NM_CONTROLLED=no
+BOOTPROTO="static"
+IPADDR=192.168.137.200
+NETMASK=255.255.255.0
+GATEWAY=192.168.137.2
+DNS1=10.64.0.10
+
+保存退出执行Service network restart
+实时查看文件内容
+
+tail -F xxx.log
+echo "1" > xxx.log  
+echo "2" >> xxx.log 
+
+>:覆盖（慎用）
+>>:追加
+
+-F参数 ==> -f --retry
+重命名
+
+mv xxx1  xxx2
+复制
+
+cp xxx1 xxx2 以前的文件不动，产生新的文件
+
+提醒：
+    xxx.default
+    xxx.xml
+    cp xxx.xml xxx.xml20171205 (养成备份习惯)
+输出打印
+
+echo "123"
+alias
+
+alias 查看有哪些别名
+
+临时：
+   alias jh='cd /home/jepson'
+设置jh别名    =前后没有空格
+
+永久：
+alias jh='cd /home/jepson'
+配置到环境变量文件，执行生效命令
+
+cd jh
+环境变量配置
+
+全局：
+/etc/profile
+
+个人：
+~/.bash_profile 或者 ~/.bashrc
+    1.假设没有.bash_profile,怎么办？
+    2.注意.bash_profile的权限问题
+
+生效：
+source /etc/profile
+. .bash_profile 或者 source .bash_profile
+删除文件
+
+rm 删除时需要询问
+rm -f xxx强制删除文件，不询问
+rm -r -f 或者 rm -rf 递归，强制删除文件夹
+慎用：rm -rf / (手工)
+shell脚本
+
+[root@rzdatahadoop001 ~]# mkdir /home/jepson/001
+[root@rzdatahadoop001 ~]# jpath="/home/jepson/001"
+[root@rzdatahadoop001 ~]# echo $jpath
+/home/jepson/001
+[root@rzdatahadoop001 ~]# touch /home/jepson/001/xxx.log
+[root@rzdatahadoop001 ~]# echo $jpath
+/home/jepson/001
+[root@rzdatahadoop001 ~]# rm -rf $jpath/*
+[root@rzdatahadoop001 ~]# ll /home/jepson/001/
+total 0
+
+#逻辑错误导致jpath复制为""
+[root@rzdatahadoop001 ~]# touch /home/jepson/001/xxx.log
+[root@rzdatahadoop001 ~]# jpath=""   
+[root@rzdatahadoop001 ~]# echo $jpath
+[root@rzdatahadoop001 ~]# rm -rf $jpath/*  ==>rm -rf /*
+怎样查看历史命令
+
+history
+管道符
+
+|
+怎样过滤
+
+grep
+例如：history | grep xxx
+vi
+
+三种模式：
+
+   命令模式
+gg 第一行第一个字母
+G 最后一行第一个字母
+shift+$ 行的最后一个字母
+dd 删除当前行
+dG 删除光标以下的所有行
+ndd 删除光标所在的向下n行
+
+i 插入--> 编辑模式
+
+编辑模式: :
+ECS 退出-->尾行模式
+尾行模式: :
+:q 退出vi编辑器
+:w 保存修改的内容
+:wq 保存并退出
+:q! 强制退出，当对文本内容作了修改而不想要保存时
+:w! 强制保存，当没有文本的写权限时
+:set number 或 :set nu 显示行号
+:set nonumber 或 :set nonu 取消显示行号
+:/内容/ 或 /内容 查找指定内容 //n将光标移动到下一个目标 //N上一个
+:n 跳转到第n行
+
+假如文件内容满满的，我需要重新覆盖文件
+ctrl + a，Ctrl + c --> gg + dg -->i,右键粘贴 -->esc -->shift + : --->wq
